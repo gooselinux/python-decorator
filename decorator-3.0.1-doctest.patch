@@ -1,0 +1,75 @@
+diff -up decorator-3.0.1/documentation.py.doctest decorator-3.0.1/documentation.py
+--- decorator-3.0.1/documentation.py.doctest	2009-05-21 21:13:24.171482875 -0700
++++ decorator-3.0.1/documentation.py	2009-05-21 21:59:01.242233871 -0700
+@@ -120,7 +120,7 @@ keyword arguments:
+ 
+  >>> from inspect import getargspec 
+  >>> print getargspec(f1) 
+- ([], 'args', 'kw', None)
++ ArgSpec(args=[], varargs='args', keywords='kw', defaults=None)
+ 
+ This means that introspection tools such as pydoc will give
+ wrong informations about the signature of ``f1``. This is pretty bad:
+@@ -186,7 +186,7 @@ The signature of ``heavy_computation`` i
+ .. code-block:: python
+ 
+  >>> print getargspec(heavy_computation) 
+- ([], None, None, None)
++ ArgSpec(args=[], varargs=None, keywords=None, defaults=None)
+ 
+ A ``trace`` decorator
+ ------------------------------------------------------
+@@ -219,7 +219,7 @@ and it that it has the correct signature
+ .. code-block:: python
+ 
+  >>> print getargspec(f1) 
+- (['x'], None, None, None)
++ ArgSpec(args=['x'], varargs=None, keywords=None, defaults=None)
+ 
+ The same decorator works with functions of any signature:
+ 
+@@ -233,7 +233,7 @@ The same decorator works with functions 
+  calling f with args (0, 3, 2), {}
+  
+  >>> print getargspec(f) 
+- (['x', 'y', 'z'], 'args', 'kw', (1, 2))
++ ArgSpec(args=['x', 'y', 'z'], varargs='args', keywords='kw', defaults=(1, 2))
+ 
+ That includes even functions with exotic signatures like the following:
+ 
+@@ -243,7 +243,7 @@ That includes even functions with exotic
+  ... def exotic_signature((x, y)=(1,2)): return x+y
+  
+  >>> print getargspec(exotic_signature)
+- ([['x', 'y']], None, None, ((1, 2),))
++ ArgSpec(args=[['x', 'y']], varargs=None, keywords=None, defaults=((1, 2),))
+  >>> exotic_signature() 
+  calling exotic_signature with args ((1, 2),), {}
+  3
+@@ -281,7 +281,7 @@ can easily check that the signature has 
+ .. code-block:: python
+ 
+  >>> print getargspec(trace)
+- (['f'], None, None, None)
++ ArgSpec(args=['f'], varargs=None, keywords=None, defaults=None)
+ 
+ Therefore now ``trace`` can be used as a decorator and
+ the following will work:
+@@ -387,13 +387,13 @@ be locked. Here is a minimalistic exampl
+ Each call to ``write`` will create a new writer thread, but there will 
+ be no synchronization problems since ``write`` is locked.
+ 
+->>> write("data1") 
+-<Thread(write-1, started)>
++>>> write("data1")  # doctest: +ELLIPSIS
++<Thread(write-1, started...)>
+ 
+ >>> time.sleep(.1) # wait a bit, so we are sure data2 is written after data1
+ 
+->>> write("data2") 
+-<Thread(write-2, started)>
++>>> write("data2") # doctest: +ELLIPSIS
++<Thread(write-2, started...)>
+ 
+ >>> time.sleep(2) # wait for the writers to complete
+ 
